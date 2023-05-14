@@ -5,7 +5,7 @@ import Logo from '../assets/logo.svg'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import axios from 'axios'
-import { registerRoute } from '../utlis/APIRoutes';
+import { loginRoute } from '../utlis/APIRoutes';
 
 function Register() {
 
@@ -17,6 +17,13 @@ function Register() {
     password: '',
     confirmPassword: ''
   })
+
+  useEffect(() => {
+    if(localStorage.getItem("chat-app-user")){
+      navigate('/');
+    }
+  },[]);
+
 
   const handleChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value });
@@ -33,9 +40,8 @@ function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (handleValidation()) {
-      console.log("in validation", registerRoute);
       const { username, email, password } = values;
-      const { data } = await axios.post(registerRoute, { 
+      const { data } = await axios.post(loginRoute, { 
         username, 
         email, 
         password 
@@ -52,7 +58,7 @@ function Register() {
         //   data.message,
         //   toastOptions
         // );
-        navigate('/chat');
+        navigate('/');
       }
 
     }
