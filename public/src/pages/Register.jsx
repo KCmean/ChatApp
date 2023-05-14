@@ -1,37 +1,103 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import Logo from '../assets/logo.svg'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
+import axios from 'axios'
+import { registerRoute } from '../utlis/APIRoutes';
 
 function Register() {
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    alert('form')
-  };
+  const [values, setValues] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  })
 
   const handleChange = (event) => {
+    setValues({ ...values, [event.target.name]: event.target.value });
+  };
 
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 8000,
+    pauseOnHover: true,
+    draggable: true,
+    theme: 'dark',
   }
-  ;
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (handleValidation()) {
+      console.log("in validation", registerRoute);
+      const { username, email, password } = values;
+      const { data } = await axios.post(registerRoute, { 
+        username, 
+        email, 
+        password 
+      });
+
+    }
+  };
+
+  const handleValidation = () => {
+    const { password, confirmPassword, username, email } = values;
+    if (password !== confirmPassword) {
+      console.log(confirmPassword);
+      toast.error(
+        "password and confirm password does not match",
+        toastOptions
+
+      );
+      return false;
+    }
+    else if (username.length < 3) {
+      toast.error(
+        "username must be greater than 3 characters",
+        toastOptions
+      );
+      return false;
+    }
+    else if (password.length < 8) {
+      toast.error(
+        "password must be equal greater than 8 characters",
+        toastOptions
+      );
+      return false;
+    }
+    else if (email === "") {
+      toast.error(
+        "email cannot be empty",
+        toastOptions
+      );
+      return false;
+    }
+    return true;
+  };
+
+
   return (
     <>
       <FontContainer>
         <form onSubmit={(event) => handleSubmit(event)}>
           <div className='brand'>
-          <img src={Logo} alt="Logo" />
-          <h1>chatzyy</h1>
+            <img src={Logo} alt="Logo" />
+            <h1>chatzyy</h1>
           </div>
           <input type="text" placeholder='Username' name='username' onChange={(e) => handleChange(e)} />
           <input type="email" placeholder='Email' name='email' onChange={(e) => handleChange(e)} />
           <input type="password" placeholder='Password' name='password' onChange={(e) => handleChange(e)} />
-          <input type="password" placeholder='Confirm Password' name='confirm password' onChange={(e) => handleChange(e)} />
+          <input type="password" placeholder='Confirm Password' name='confirmPassword' onChange={(e) => handleChange(e)} />
 
           <button type="submit">Create User</button>
           <span>Already have an accout ? <Link to='/login'>Login</Link></span>
 
         </form>
       </FontContainer>
+
+      <ToastContainer />
+
     </>
   )
 }
