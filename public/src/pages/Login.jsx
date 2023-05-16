@@ -52,7 +52,7 @@ function Login() {
       }
       if (data.status === true) {
         localStorage.setItem('chat-app-user', JSON.stringify(data.user));
-        navigate('/chat');
+        navigate('/');
       }
 
     }
