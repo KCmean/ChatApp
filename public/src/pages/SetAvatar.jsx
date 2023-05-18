@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
-import Logo from '../assets/loader.gif'
+import loader from '../assets/loader.gif'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import axios from 'axios'
 import { setAvatarRoute } from '../utlis/APIRoutes';
 import { Buffer } from "buffer";
+
 
 
 export default function SetAvatar() {
@@ -23,7 +24,26 @@ export default function SetAvatar() {
     draggable: true,
     theme: 'dark',
   };
-  const setProfilePicture = async () => {};
+
+  const setProfilePicture = async () => {
+    if(selectedAvatar === undefined){
+      toast.error("please select an avatar", toastOptions);
+    }else{
+      const user = await JSON.parse(localStorage.getItem("chat-app-user"));
+      const { data } = await axios.post(`${setAvatarRoute}/${user._id}`, {
+        image: avatars[selectedAvatar],
+      })
+      if(data.isSet){
+        user.isAvatarImageSet = true;
+        user.avatarImage = data.image;
+        localStorage.setItem('chat-app-user', JSON.stringify(user));
+        navigate('/');
+      } else {
+        toast.error("error setting avatar please try again", toastOptions);
+      }
+    }
+
+  };
 
   //   useEffect( () => {
 
@@ -128,6 +148,10 @@ export default function SetAvatar() {
 
   return (
     <>
+    {
+      loading ? <Container>
+        <img src={loader} alt="loader" className='' />
+      </Container> : (
       <Container>
         <div className='title-container'>
           <h1>
@@ -152,6 +176,8 @@ export default function SetAvatar() {
           Set As Profile Picture
         </button>
       </Container>
+      )
+    }
       <ToastContainer />
     </>
   )
@@ -211,8 +237,6 @@ const Container = styled.div`
         background-color: #4e0eff;
         transition: 0.5s ease-in-out;
       }
-
-      
     }
 
 `;
