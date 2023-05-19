@@ -31,11 +31,12 @@ export default function SetAvatar() {
       toast.error("please select an avatar", toastOptions);
     }else{
       const user = await JSON.parse(localStorage.getItem("chat-app-user"));
-      console.log(user);
-      const { data } = await axios.post(`${setAvatarRoute}/${user._id}`, {
+      // console.log(avatars[selectedAvatar]);
+      console.log(user._id);
+      const  { data }  = await axios.post(`${setAvatarRoute}/${user._id}`, {
         image: avatars[selectedAvatar],
       })
-      console.log();
+      console.log(data);
       if(data.isSet){
         user.isAvatarImageSet = true;
         user.avatarImage = data.image;
@@ -141,11 +142,12 @@ export default function SetAvatar() {
         );
         const buffer =  Buffer.from(image.data);
         data.push(buffer.toString("base64"));
+
+        // console.log(data);
       }
       setAvatar(data);
       setLoading(false);
   }fetchAvatar()}, []);
-
 
 
 
