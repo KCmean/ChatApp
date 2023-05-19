@@ -17,6 +17,7 @@ export default function SetAvatar() {
   const [avatars, setAvatar] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedAvatar, setSelectedAvatar] = useState(undefined);
+
   const toastOptions = {
     position: "bottom-right",
     autoClose: 8000,
@@ -30,9 +31,11 @@ export default function SetAvatar() {
       toast.error("please select an avatar", toastOptions);
     }else{
       const user = await JSON.parse(localStorage.getItem("chat-app-user"));
+      console.log(user);
       const { data } = await axios.post(`${setAvatarRoute}/${user._id}`, {
         image: avatars[selectedAvatar],
       })
+      console.log();
       if(data.isSet){
         user.isAvatarImageSet = true;
         user.avatarImage = data.image;
