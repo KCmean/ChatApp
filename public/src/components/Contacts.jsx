@@ -5,6 +5,8 @@ import logo from '../assets/logo.svg'
 
 
 function Contacts({ contacts, currentUser }) {
+
+  console.log(contacts)
   const [currentUserName, setCurrentUserName] = useState(undefined)
   const [currentUserImage, setCurrentUserImage] = useState(undefined)
   const [currentSelected, setCurrentSelected] = useState(undefined)
@@ -94,6 +96,14 @@ const Container = styled.div`
     align-items: center;
     overflow: auto;
     gap: 0.8rem;
+    &::-webkit-scrollbar {
+      width: 0.2rem;
+      &-thumb {
+        background-color: #ffffff39;
+        width: 0.1rem;
+        border-radius: 1rem;
+      }
+    }
     .contact{
       background-color: #ffffff39;
       min-height: 5rem;
@@ -134,6 +144,22 @@ const Container = styled.div`
         max-inline-size: 100%;
       }
     }
+    .username{
+      h2{
+        color: white;
+
+      }
+    }
+    @media screen and (min-width: 720px) and (max-width: 1080px){
+      grid-template-columns: 35% 65%;
+      gap: 0.5rem;
+      .username{
+        h2{
+          font-size: 1rem;
+        }
+      }
+    }
+
   }
 `
 
